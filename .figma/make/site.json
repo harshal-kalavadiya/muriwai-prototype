@@ -1,0 +1,10 @@
+{
+  "description": "Engage children with an interactive drag-and-drop activity to sequence story events, enhancing comprehension and critical thinking skills through hands-on learning.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

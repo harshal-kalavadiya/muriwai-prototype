@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,400&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Nunito', system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #fdf6ee;
+}
+
+.drag-card {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.drag-card:active {
+  cursor: grabbing;
+}
+.drag-card.dragging {
+  opacity: 0.4;
+}
+.drop-zone.drag-over {
+  outline: 3px dashed #6F9FE8;
+  background-color: #D9EEF7;
+}
+
