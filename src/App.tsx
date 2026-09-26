@@ -820,66 +820,221 @@ function IntroScreen({
   onStart: () => void
 }) {
   return (
-    <StorybookFrame badge="Preparation" title="Ready for the Story?">
-      <div
-        className="rounded-2xl p-5 mb-5 font-semibold leading-relaxed"
-        style={{
-          backgroundColor: "#ffffff",
-          border: "2px solid #E8DCC8",
-          color: "#4E4A4A",
-        }}
-      >
-        <p className="mb-3">
-          This story is about Te Muriwai and the Mātaatua waka.
-        </p>
-        <p>
-          You will read two short story pages. Tap the underlined words to learn
-          their meaning and pronunciation. At the end, try some fun activities.
-        </p>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-4 mb-5">
-        <div
-          className="rounded-2xl p-5"
-          style={{ backgroundColor: "#EEF7FF", border: "2px solid #BFCBF4" }}
+    <StorybookFrame
+      badge="Preparation"
+      title="Ready for the Story?"
+    >
+      <div className="space-y-6">
+        {/* Welcome / Introduction */}
+        <section
+          className="rounded-3xl p-6 md:p-8"
+          style={{
+            background:
+              "linear-gradient(135deg, #F4F9FF 0%, #EEF7FF 100%)",
+            border: "1px solid #C8D8F5",
+            boxShadow: "0 8px 24px rgba(82, 113, 155, 0.08)",
+          }}
         >
-          <h2 className="font-black mb-3" style={{ color: "#4E4A4A" }}>
-            How to use
-          </h2>
-          <ol
-            className="space-y-2 text-sm font-semibold"
-            style={{ color: "#6F7B8A" }}
-          >
-            <li>1. Read the story.</li>
-            <li>2. Tap underlined words.</li>
-            <li>3. Explore Words &amp; Places.</li>
-            <li>4. Try the activities.</li>
-          </ol>
-        </div>
+          <div className="flex items-start gap-4">
+            <div
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-xl"
+              style={{
+                backgroundColor: "#FFF4A8",
+                border: "2px solid #E8C830",
+              }}
+            >
+              📖
+            </div>
+
+            <div>
+              <h2
+                className="text-xl md:text-2xl font-black mb-2"
+                style={{ color: "#403B3B" }}
+              >
+                Welcome to Kōrero Muriwai
+              </h2>
+
+              <p
+                className="text-sm md:text-base font-semibold leading-relaxed"
+                style={{ color: "#687587" }}
+              >
+                This story is about Te Muriwai and the Mātaatua waka.
+                Get ready to explore the story, discover Māori words and
+                places, and learn about courage and leadership.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* How the story works */}
+        <section>
+          <div className="mb-3">
+            <h2
+              className="text-lg md:text-xl font-black"
+              style={{ color: "#403B3B" }}
+            >
+              Your story journey
+            </h2>
+
+            <p
+              className="text-sm font-semibold mt-1"
+              style={{ color: "#7A8491" }}
+            >
+              Follow these simple steps as you explore.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {[
+              {
+                number: "1",
+                icon: "📖",
+                title: "Read",
+                text: "Read the story pages.",
+              },
+              {
+                number: "2",
+                icon: "🔎",
+                title: "Discover",
+                text: "Tap words to learn more.",
+              },
+              {
+                number: "3",
+                icon: "🌿",
+                title: "Explore",
+                text: "Discover Words & Places.",
+              },
+              {
+                number: "4",
+                icon: "⭐",
+                title: "Try",
+                text: "Have a go at the activities.",
+              },
+            ].map((step) => (
+              <div
+                key={step.number}
+                className="rounded-2xl p-4"
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  border: "1px solid #E3DCCF",
+                  boxShadow: "0 4px 12px rgba(60, 60, 60, 0.05)",
+                }}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div
+                    className="flex h-9 w-9 items-center justify-center rounded-xl font-black"
+                    style={{
+                      backgroundColor: "#FFF4A8",
+                      color: "#5B5130",
+                      border: "1px solid #E8C830",
+                    }}
+                  >
+                    {step.number}
+                  </div>
+
+                  <span className="text-xl">{step.icon}</span>
+                </div>
+
+                <h3
+                  className="font-black mb-1"
+                  style={{ color: "#403B3B" }}
+                >
+                  {step.title}
+                </h3>
+
+                <p
+                  className="text-sm font-semibold leading-relaxed"
+                  style={{ color: "#7A8491" }}
+                >
+                  {step.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Marae knowledge card */}
         <button
           onClick={onMarae}
-          className="rounded-2xl p-5 text-left transition-transform active:scale-[0.99]"
+          className="group w-full rounded-3xl p-5 md:p-6 text-left transition-all duration-200 hover:-translate-y-0.5"
           style={{
-            backgroundColor: "#FFF8CC",
-            border: "2px solid #E8C830",
+            background:
+              "linear-gradient(135deg, #FFF9D8 0%, #FFF4C4 100%)",
+            border: "1px solid #E8C830",
+            boxShadow: "0 6px 18px rgba(190, 158, 40, 0.10)",
             cursor: "pointer",
           }}
         >
-          <SmallPill tone="lavender">Knowledge</SmallPill>
-          <h2
-            className="font-black text-xl mt-3 mb-1"
-            style={{ color: "#4E4A4A" }}
-          >
-            What Is a Marae?
-          </h2>
-          <p className="text-sm font-semibold" style={{ color: "#6F7B8A" }}>
-            Tap to discover before you begin
-          </p>
-        </button>
-      </div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-start gap-4">
+              <div
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg"
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  border: "1px solid #E8C830",
+                }}
+              >
+                🌿
+              </div>
 
-      <div className="flex justify-center">
-        <PrimaryBtn onClick={onStart}>Start Reading →</PrimaryBtn>
+              <div>
+                <SmallPill tone="lavender">Knowledge</SmallPill>
+
+                <h2
+                  className="font-black text-lg md:text-xl mt-2 mb-1"
+                  style={{ color: "#403B3B" }}
+                >
+                  What Is a Marae?
+                </h2>
+
+                <p
+                  className="text-sm font-semibold"
+                  style={{ color: "#72705F" }}
+                >
+                  Tap here to discover more before you begin.
+                </p>
+              </div>
+            </div>
+
+            <div
+              className="hidden sm:flex h-10 w-10 items-center justify-center rounded-full transition-transform duration-200 group-hover:translate-x-1"
+              style={{
+                backgroundColor: "#FFFFFF",
+                border: "1px solid #E8C830",
+                color: "#5B5130",
+              }}
+            >
+              →
+            </div>
+          </div>
+        </button>
+
+        {/* Start section */}
+        <div
+          className="rounded-3xl p-6 md:p-7 text-center"
+          style={{
+            backgroundColor: "#DDF2FA",
+            border: "1px solid #BFD9E8",
+          }}
+        >
+          <h2
+            className="text-xl md:text-2xl font-black mb-2"
+            style={{ color: "#403B3B" }}
+          >
+            Ready to begin?
+          </h2>
+
+          <p
+            className="text-sm font-semibold mb-5"
+            style={{ color: "#6C7C89" }}
+          >
+            Turn the page and discover the story of Te Muriwai.
+          </p>
+
+          <PrimaryBtn onClick={onStart}>
+            Start Reading →
+          </PrimaryBtn>
+        </div>
       </div>
     </StorybookFrame>
   )
@@ -1112,7 +1267,7 @@ function PhraseScreen({
         >
           Kia whakatāne au i ahau
         </div>
-        <AudioListenButton src="/audio/kia%20whakatane.mp3" />
+        <AudioListenButton src="/audio/kiawhakatane.mp3" />
       </div>
 
       <div className="space-y-3 mb-5">
@@ -1396,7 +1551,7 @@ function MataatuaCard({ onBack }: { onBack: () => void }) {
       example="“The Mātaatua waka arrived at Kākahoroa.”"
       imageText="Mātaatua waka"
       imageSrc="/images/MataatuaWaka.jpg"
-      audioSrc="/audio/mataatua%20waka.mp3"
+      audioSrc="/audio/mataatuawaka.mp3"
       onBack={onBack}
     />
   )
@@ -1467,7 +1622,7 @@ function ManukaCard({ onBack }: { onBack: () => void }) {
       example="“Te Mānuka Tūtahi is another accepted name for the place.”"
       imageText="Historic site / Te Mānuka Tūtahi"
       imageSrc="/images/ManukaTutahi.jpeg"
-      audioSrc="/audio/Te%20M%C4%81nuka%20T%C5%ABtahi.mp3"
+      audioSrc="/audio/TeManukaTutahi.mp3"
       onBack={onBack}
     />
   )
