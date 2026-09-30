@@ -96,7 +96,7 @@ export default function App() {
             onNext={() => navigate("story2")}
             onWords={() => openWords("story1")}
             onKakahoroa={() =>
-              openDetail("place-kakahoroa", "story1", "kakahoroa")
+              openDetail("word-kakahoroa", "story1", "kakahoroa")
             }
             onMuriwai={() => openDetail("word-muriwai", "story1", "muriwai")}
           />
@@ -380,7 +380,7 @@ function SiteHeader({
 
 // ─── Shared visual components ─────────────────────────────────────────────────
 
-function ProgressDots({ current, total }: { current: number total: number }) {
+function ProgressDots({ current, total }: { current: number; total: number }) {
   return (
     <div className="flex items-center gap-2 justify-center mb-3">
       {Array.from({ length: total }, (_, i) => (
@@ -415,7 +415,7 @@ function QuizFrame({
   badge: string
   title: string
   subtitle: string
-  progress?: { current: number total: number }
+  progress?: { current: number; total: number }
 }) {
   return (
     <div
@@ -1971,7 +1971,7 @@ function MapScreen({
 
   // Click targets are centred on the red coordinate pins already drawn in the map artwork.
   // These positions are for the zoomed Whakatāne-area crop below.
-  const localZoomPositions: Record<string, { x: number y: number }> = {
+  const localZoomPositions: Record<string, { x: number; y: number }> = {
     kakahoroa: { x: 30.4, y: 41.5 },
     manuka: { x: 45.3, y: 45.2 },
     wairere: { x: 22.8, y: 60.7 },
@@ -2383,7 +2383,7 @@ function PhraseScreen({
   )
 }
 
-type WordTarget = "word-muriwai" | "word-mataatua" | "place-kakahoroa" | "place-manuka" | "phrase"
+type WordTarget = "word-muriwai" | "word-mataatua" | "word-kakahoroa" | "place-manuka" | "phrase"
 
 const WORDS = [
   {
@@ -2405,7 +2405,7 @@ const WORDS = [
     n: "3",
     title: "Kākahoroa",
     summary: "An older accepted name for Whakatāne.",
-    target: "place-kakahoroa" as WordTarget,
+    target: "word-kakahoroa" as WordTarget,
   },
   {
     key: "manuka",
