@@ -250,23 +250,14 @@ function SiteHeader({
   detailReturn: Screen
   onNavigate: (screen: Screen) => void
 }) {
+  const [storyMenuOpen, setStoryMenuOpen] = useState(false)
+
   const items: Array<{
     label: string
     target: Screen
     match: (screen: Screen) => boolean
   }> = [
     { label: "Home", target: "welcome", match: (s) => s === "welcome" },
-    {
-      label: "Story",
-      target: "intro",
-      match: (s) =>
-        s === "intro" ||
-        s === "marae" ||
-        s === "story1" ||
-        s === "story2" ||
-        (isPlaceScreen(s) &&
-          (detailReturn === "story1" || detailReturn === "story2")),
-    },
     {
       label: "Words & Places",
       target: "words",
@@ -289,22 +280,39 @@ function SiteHeader({
         s === "quiz3" ||
         s === "finish",
     },
-    {
-      label: "Explore More",
-      target: "explore",
-      match: (s) =>
-        s === "explore" ||
-        s === "story3" ||
-        s === "story4" ||
-        s === "word-rahui" ||
-        s === "saying-rahui" ||
-        s === "map" ||
-        (isPlaceScreen(s) &&
-          (detailReturn === "story3" ||
-            detailReturn === "story4" ||
-            detailReturn === "map")),
-    },
   ]
+
+  const storyActive =
+    currentScreen === "intro" ||
+    currentScreen === "marae" ||
+    currentScreen === "story1" ||
+    currentScreen === "story2" ||
+    currentScreen === "explore" ||
+    currentScreen === "story3" ||
+    currentScreen === "story4" ||
+    currentScreen === "word-rahui" ||
+    currentScreen === "saying-rahui" ||
+    currentScreen === "map" ||
+    (isPlaceScreen(currentScreen) &&
+      (detailReturn === "story1" ||
+        detailReturn === "story2" ||
+        detailReturn === "story3" ||
+        detailReturn === "story4" ||
+        detailReturn === "map"))
+
+  function openStory(target: "story1" | "story2") {
+    setStoryMenuOpen(false)
+
+    if (target === "story1") {
+      // Story 1 keeps the existing introduction → marae → story → activities flow.
+      onNavigate("intro")
+      return
+    }
+
+    // Story 2 starts from the existing "Explore More" introduction,
+    // then continues to Story 2 pages and the map.
+    onNavigate("explore")
+  }
 
   return (
     <header
@@ -348,7 +356,136 @@ function SiteHeader({
           className="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap sm:ml-auto"
           aria-label="Main navigation"
         >
-          {items.map((item) => {
+          {/* Home */}
+          <button
+            type="button"
+            onClick={() => onNavigate("welcome")}
+            className="px-3.5 py-2 rounded-full text-sm font-black transition-transform active:scale-[0.97]"
+            style={{
+              backgroundColor:
+                currentScreen === "welcome"
+                  ? "#FFD95A"
+                  : "rgba(255,255,255,0.72)",
+              color: "#4E4A4A",
+              border:
+                currentScreen === "welcome"
+                  ? "2px solid #E8C830"
+                  : "2px solid transparent",
+              cursor: "pointer",
+              boxShadow:
+                currentScreen === "welcome"
+                  ? "0 2px 7px rgba(78,74,74,0.08)"
+                  : "none",
+            }}
+          >
+            Home
+          </button>
+
+          {/* Story dropdown */}
+          <div
+            className="relative group"
+            onMouseEnter={() => setStoryMenuOpen(true)}
+            onMouseLeave={() => setStoryMenuOpen(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setStoryMenuOpen((open) => !open)}
+              className="px-3.5 py-2 rounded-full text-sm font-black transition-transform active:scale-[0.97]"
+              style={{
+                backgroundColor: storyActive
+                  ? "#FFD95A"
+                  : "rgba(255,255,255,0.72)",
+                color: "#4E4A4A",
+                border: storyActive
+                  ? "2px solid #E8C830"
+                  : "2px solid transparent",
+                cursor: "pointer",
+                boxShadow: storyActive
+                  ? "0 2px 7px rgba(78,74,74,0.08)"
+                  : "none",
+              }}
+              aria-haspopup="menu"
+              aria-expanded={storyMenuOpen}
+            >
+              Story <span className="ml-1 text-xs">▾</span>
+            </button>
+
+            <div
+              className={`absolute right-0 top-full pt-2 transition-all duration-150 ${
+                storyMenuOpen
+                  ? "opacity-100 visible translate-y-0"
+                  : "opacity-0 invisible -translate-y-1 pointer-events-none"
+              }`}
+            >
+              <div
+                className="w-52 rounded-2xl p-2"
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  border: "2px solid #BFCBF4",
+                  boxShadow: "0 12px 28px rgba(78,74,74,0.14)",
+                }}
+                role="menu"
+              >
+                <button
+                  type="button"
+                  onClick={() => openStory("story1")}
+                  className="w-full text-left rounded-xl px-4 py-3 text-sm font-black transition-colors"
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "#4E4A4A",
+                    border: 0,
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#FFF5DE"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent"
+                  }}
+                  role="menuitem"
+                >
+                  <span className="block">Story 1</span>
+                  <span
+                    className="block text-xs font-semibold mt-0.5"
+                    style={{ color: "#6F7B8A" }}
+                  >
+                    The Mātaatua waka
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => openStory("story2")}
+                  className="w-full text-left rounded-xl px-4 py-3 text-sm font-black transition-colors"
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "#4E4A4A",
+                    border: 0,
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#FFF5DE"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent"
+                  }}
+                  role="menuitem"
+                >
+                  <span className="block">Story 2</span>
+                  <span
+                    className="block text-xs font-semibold mt-0.5"
+                    style={{ color: "#6F7B8A" }}
+                  >
+                    Muriwai and the Rāhui
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {items
+            .filter((item) => item.label !== "Home")
+            .map((item) => {
             const active = item.match(currentScreen)
             return (
               <button
@@ -365,7 +502,9 @@ function SiteHeader({
                     ? "2px solid #E8C830"
                     : "2px solid transparent",
                   cursor: "pointer",
-                  boxShadow: active ? "0 2px 7px rgba(78,74,74,0.08)" : "none",
+                  boxShadow: active
+                    ? "0 2px 7px rgba(78,74,74,0.08)"
+                    : "none",
                 }}
               >
                 {item.label}
@@ -377,6 +516,7 @@ function SiteHeader({
     </header>
   )
 }
+
 
 // ─── Shared visual components ─────────────────────────────────────────────────
 
