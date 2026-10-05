@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 
 // ─── Screen navigation ───────────────────────────────────────────────────────
 
@@ -819,6 +819,20 @@ function StoryLine({
   )
 }
 
+function StoryAudioBar({ src }: { src: string }) {
+  return (
+    <div
+      className="rounded-2xl px-5 py-3 mb-4 flex items-center justify-between gap-4 flex-wrap"
+      style={{ backgroundColor: "#D9D1F5", border: "2px solid #BFCBF4" }}
+    >
+      <div className="font-black" style={{ color: "#4E4A4A" }}>
+        🎧 Listen to this page
+      </div>
+      <AudioListenButton src={src} label="Listen to this page" />
+    </div>
+  )
+}
+
 function InlineLearn({
   children,
   onClick,
@@ -876,12 +890,17 @@ function SmallPill({
 function AudioListenButton({
   src,
   disabled = false,
+  label = "Listen to pronunciation",
 }: {
   src: string
   disabled?: boolean
+  label?: string
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [playing, setPlaying] = useState(false)
+
+  // Stop playback when leaving the page, so long story audio doesn't keep going.
+  useEffect(() => () => audioRef.current?.pause(), [])
 
   async function toggleAudio() {
     if (disabled) return
@@ -924,8 +943,8 @@ function AudioListenButton({
         disabled
           ? "Real-person pronunciation audio coming soon"
           : playing
-            ? "Stop pronunciation"
-            : "Listen to pronunciation"
+            ? "Stop audio"
+            : label
       }
       title={
         disabled ? "Real-person pronunciation audio coming soon" : undefined
@@ -1454,6 +1473,8 @@ function Story1Screen({
         />
       </div>
 
+      <StoryAudioBar src="/audio/Story1Page1.mp3" />
+
       {/* STORY POINTS — confirmed final text, eight points */}
       <div className="space-y-2">
         <StoryLine>
@@ -1533,6 +1554,8 @@ function Story2Screen({
           className="block w-full h-auto object-contain"
         />
       </div>
+
+      <StoryAudioBar src="/audio/Story1Page2.mp3" />
 
       {/* STORY POINTS — confirmed final text */}
       <div className="space-y-2">
@@ -1687,6 +1710,8 @@ function Story3Screen({
         Tap the highlighted place names to learn more.
       </div>
 
+      <StoryAudioBar src="/audio/Story2Page1.mp3" />
+
       <div className="space-y-2">
         <StoryLine>
           Many years later, Muriwai lived around{" "}
@@ -1751,6 +1776,8 @@ function Story4Screen({
       >
         Tap the highlighted words to learn more.
       </div>
+
+      <StoryAudioBar src="/audio/Story2Page2.mp3" />
 
       <div className="space-y-2">
         <StoryLine>
@@ -1961,7 +1988,7 @@ const MAP_PLACES: MapPlace[] = [
       "This place appears in the story about Muriwai and her sons.",
     ],
     audioSrc: "/audio/Ohiwa.mp3",
-    audioReady: false,
+    audioReady: true,
     imageSrc: "/images/Ohiwa.jpeg",
     imagePosition: "60% 55%",
     x: 58.6,
@@ -1978,7 +2005,7 @@ const MAP_PLACES: MapPlace[] = [
       "This place appears in the story about Muriwai and her sons.",
     ],
     audioSrc: "/audio/Opotiki.mp3",
-    audioReady: false,
+    audioReady: true,
     imageSrc: "/images/Opotiki.jpeg",
     imagePosition: "82% 58%",
     x: 79.6,
@@ -1995,7 +2022,7 @@ const MAP_PLACES: MapPlace[] = [
       "The saying is connected with the rāhui in Muriwai’s story.",
     ],
     audioSrc: "/audio/NgaKuriAWharei.mp3",
-    audioReady: false,
+    audioReady: true,
     imageSrc: "/images/NgaKuriAWharei.jpeg",
     imagePosition: "0% 35%",
     x: 5.9,
@@ -2012,7 +2039,7 @@ const MAP_PLACES: MapPlace[] = [
       "The saying is connected with the rāhui in Muriwai’s story.",
     ],
     audioSrc: "/audio/Tihirau.mp3",
-    audioReady: false,
+    audioReady: true,
     imageSrc: "/images/Tihirau.jpeg",
     imagePosition: "100% 45%",
     x: 92.0,
@@ -2029,7 +2056,7 @@ const MAP_PLACES: MapPlace[] = [
       "It is one of the new places you can discover on this map.",
     ],
     audioSrc: "/audio/Wairere.mp3",
-    audioReady: false,
+    audioReady: true,
     imageSrc: "/images/Wairere.jpeg",
     imagePosition: "28% 65%",
     x: 28.3,
@@ -2046,7 +2073,7 @@ const MAP_PLACES: MapPlace[] = [
       "The rock can no longer be seen today.",
     ],
     audioSrc: "/audio/TokaAIrakewa.mp3",
-    audioReady: false,
+    audioReady: true,
     imageSrc: "/images/TokaAIrakewa.jpeg",
     imagePosition: "35% 62%",
     x: 34.5,
@@ -2063,7 +2090,7 @@ const MAP_PLACES: MapPlace[] = [
       "It is one of the new places you can discover on this map.",
     ],
     audioSrc: "/audio/AnaOMuriwai.mp3",
-    audioReady: false,
+    audioReady: true,
     imageSrc: "/images/Ana_O_Muriwai.jpeg",
     imagePosition: "36% 70%",
     x: 36.6,
