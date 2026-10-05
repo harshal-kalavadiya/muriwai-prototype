@@ -1492,7 +1492,7 @@ function Story1Screen({
           After they arrived, the men went inland to survey the land.
         </StoryLine>
 
-        <StoryLine>The waka began to move away from the shore.</StoryLine>
+        <StoryLine>The waka was left near the shore. The waka began to move away from the shore.</StoryLine>
 
         <StoryLine>The people watched as the waka moved away.</StoryLine>
 
@@ -1828,19 +1828,25 @@ function RahuiWordCard({ onBack }: { onBack: () => void }) {
       subtitle="A word from Muriwai’s story"
     >
       <div
-        className="rounded-2xl p-5 mb-5 text-center"
-        style={{ backgroundColor: "#D9D1F5", border: "2px solid #BFCBF4" }}
+        className="rounded-2xl p-4 mb-4 flex items-center justify-between gap-3"
+        style={{
+          backgroundColor: "#D9D1F5",
+          border: "2px solid #BFCBF4",
+        }}
       >
-        <div className="text-3xl font-black" style={{ color: "#4E4A4A" }}>
-          rāhui
+        <div className="font-black" style={{ color: "#4E4A4A" }}>
+          Listen: rah-hoo-ee
         </div>
-      </div>
 
+        <AudioListenButton src="/audio/rahui.mp3" />
+      </div>
+      
       <div className="space-y-3 mb-6">
         <StoryLine accent>
           A rāhui is a sacred restriction that asks people to respect a place
           and remember what happened there.
         </StoryLine>
+
         <StoryLine>
           In this story, Muriwai placed a rāhui after her sons did not return.
         </StoryLine>
@@ -1868,8 +1874,9 @@ function RahuiSayingCard({ onBack }: { onBack: () => void }) {
           className="text-2xl md:text-3xl font-black leading-snug"
           style={{ color: "#4E4A4A" }}
         >
-          Mai Ngā Kurī-a-Whārei ki Tihirau
+          Listen: mah-ee ngah koo-ree ah fah-ray kee tee-hee-row
         </div>
+          <AudioListenButton src="/audio/Mai_Nga_Kuri_a_Wharei_ki_Tihirau.mp3" />
       </div>
 
       <div className="space-y-3 mb-5">
