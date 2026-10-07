@@ -12,6 +12,42 @@ export default function App() {
   const [reviewReturn, setReviewReturn] = useState<Screen | null>(null)
   const [explored, setExplored] = useState<Set<string>>(new Set())
 
+  // ─── Soft background music ───────────────────────────────────────────────
+  // Starts after the user's first interaction because browsers may block
+  // autoplay with sound. It then loops continuously across the whole app.
+  const backgroundAudioRef = useRef<HTMLAudioElement | null>(null)
+
+  useEffect(() => {
+    const audio = new Audio("/audio/mixkit-classical-vibes-2-682.mp3")
+
+    audio.loop = true
+    audio.volume = 0.01
+    backgroundAudioRef.current = audio
+
+    const startBackgroundMusic = () => {
+      audio.play().catch(() => {
+        // Browser may block playback until a later user interaction.
+      })
+
+      window.removeEventListener("click", startBackgroundMusic)
+      window.removeEventListener("touchstart", startBackgroundMusic)
+      window.removeEventListener("keydown", startBackgroundMusic)
+    }
+
+    window.addEventListener("click", startBackgroundMusic)
+    window.addEventListener("touchstart", startBackgroundMusic)
+    window.addEventListener("keydown", startBackgroundMusic)
+
+    return () => {
+      audio.pause()
+      audio.currentTime = 0
+
+      window.removeEventListener("click", startBackgroundMusic)
+      window.removeEventListener("touchstart", startBackgroundMusic)
+      window.removeEventListener("keydown", startBackgroundMusic)
+    }
+  }, [])
+
   function navigate(to: Screen) {
     setScreen(to)
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior })
@@ -280,6 +316,11 @@ function SiteHeader({
         s === "quiz3" ||
         s === "finish",
     },
+    {
+      label: "Map",
+      target: "map",
+      match: (s) => s === "map" || (isPlaceScreen(s) && detailReturn === "map"),
+    },
   ]
 
   const storyActive =
@@ -292,13 +333,11 @@ function SiteHeader({
     currentScreen === "story4" ||
     currentScreen === "word-rahui" ||
     currentScreen === "saying-rahui" ||
-    currentScreen === "map" ||
     (isPlaceScreen(currentScreen) &&
       (detailReturn === "story1" ||
         detailReturn === "story2" ||
         detailReturn === "story3" ||
-        detailReturn === "story4" ||
-        detailReturn === "map"))
+        detailReturn === "story4"))
 
   function openStory(target: "story1" | "story2") {
     setStoryMenuOpen(false)
@@ -486,41 +525,40 @@ function SiteHeader({
           {items
             .filter((item) => item.label !== "Home")
             .map((item) => {
-            const active = item.match(currentScreen)
-            return (
-              <button
-                key={item.label}
-                type="button"
-                onClick={() => onNavigate(item.target)}
-                className="px-3.5 py-2 rounded-full text-sm font-black transition-transform active:scale-[0.97]"
-                style={{
-                  backgroundColor: active
-                    ? "#FFD95A"
-                    : "rgba(255,255,255,0.72)",
-                  color: "#4E4A4A",
-                  border: active
-                    ? "2px solid #E8C830"
-                    : "2px solid transparent",
-                  cursor: "pointer",
-                  boxShadow: active
-                    ? "0 2px 7px rgba(78,74,74,0.08)"
-                    : "none",
-                }}
-              >
-                {item.label}
-              </button>
-            )
-          })}
+              const active = item.match(currentScreen)
+              return (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => onNavigate(item.target)}
+                  className="px-3.5 py-2 rounded-full text-sm font-black transition-transform active:scale-[0.97]"
+                  style={{
+                    backgroundColor: active
+                      ? "#FFD95A"
+                      : "rgba(255,255,255,0.72)",
+                    color: "#4E4A4A",
+                    border: active
+                      ? "2px solid #E8C830"
+                      : "2px solid transparent",
+                    cursor: "pointer",
+                    boxShadow: active
+                      ? "0 2px 7px rgba(78,74,74,0.08)"
+                      : "none",
+                  }}
+                >
+                  {item.label}
+                </button>
+              )
+            })}
         </nav>
       </div>
     </header>
   )
 }
 
-
 // ─── Shared visual components ─────────────────────────────────────────────────
 
-function ProgressDots({ current, total }: { current: number; total: number }) {
+function ProgressDots({ current, total }: { current: number total: number }) {
   return (
     <div className="flex items-center gap-2 justify-center mb-3">
       {Array.from({ length: total }, (_, i) => (
@@ -555,7 +593,7 @@ function QuizFrame({
   badge: string
   title: string
   subtitle: string
-  progress?: { current: number; total: number }
+  progress?: { current: number total: number }
 }) {
   return (
     <div
@@ -1419,7 +1457,7 @@ function MaraeScreen({
   return (
     <StorybookFrame badge="Let’s Learn" title="What Is a Marae?">
       {/* FULL-WIDTH STORY IMAGE — preserves the complete image without cropping */}
-     <div className="flex justify-center items-center py-2 mb-5">
+      <div className="flex justify-center items-center py-2 mb-5">
         <img
           src="/images/Marae.jpeg"
           alt="Kākahoroa landscape"
@@ -1462,7 +1500,7 @@ function Story1Screen({
     <StorybookFrame
       badge="Story 1"
       title="The Waka Drifts Away!"
-      subtitle="Story 1 of 2"
+      subtitle="Page 1 of 2"
     >
       {/* FULL-WIDTH STORY IMAGE — preserves the complete image without cropping */}
       <div className="mb-6 rounded-2xl overflow-hidden bg-[#EEF7FF]">
@@ -1492,7 +1530,10 @@ function Story1Screen({
           After they arrived, the men went inland to survey the land.
         </StoryLine>
 
-        <StoryLine>The waka was left near the shore. The waka began to move away from the shore.</StoryLine>
+        <StoryLine>
+          The waka was left near the shore. The waka began to move away from the
+          shore.
+        </StoryLine>
 
         <StoryLine>The people watched as the waka moved away.</StoryLine>
 
@@ -1542,9 +1583,9 @@ function Story2Screen({
 }) {
   return (
     <StorybookFrame
-      badge="Story 2"
+      badge="Story 1"
       title="Muriwai Steps Forward!"
-      subtitle="Story 2 of 2"
+      subtitle="Page 2 of 2"
     >
       {/* FULL-WIDTH STORY IMAGE — preserves the complete image without cropping */}
       <div className="mb-6 rounded-2xl overflow-hidden bg-[#EEF7FF]">
@@ -1840,7 +1881,7 @@ function RahuiWordCard({ onBack }: { onBack: () => void }) {
 
         <AudioListenButton src="/audio/rahui.mp3" />
       </div>
-      
+
       <div className="space-y-3 mb-6">
         <StoryLine accent>
           A rāhui is a sacred restriction that asks people to respect a place
@@ -1876,7 +1917,7 @@ function RahuiSayingCard({ onBack }: { onBack: () => void }) {
         >
           Listen: mah-ee ngah koo-ree ah fah-ray kee tee-hee-row
         </div>
-          <AudioListenButton src="/audio/Mai_Nga_Kuri_a_Wharei_ki_Tihirau.mp3" />
+        <AudioListenButton src="/audio/Mai_Nga_Kuri_a_Wharei_ki_Tihirau.mp3" />
       </div>
 
       <div className="space-y-3 mb-5">
@@ -1938,7 +1979,7 @@ type MapPlace = {
   key: string
   screen: Screen
   title: string
-  pronunciation:string
+  pronunciation: string
   category: PlaceCategory
   lines: string[]
   audioSrc: string
@@ -1954,7 +1995,7 @@ const MAP_PLACES: MapPlace[] = [
     key: "kakahoroa",
     screen: "place-kakahoroa",
     title: "Kākahoroa",
-    pronunciation:"Listen: KAH-kah-hoh-roh-ah",
+    pronunciation: "Listen: KAH-kah-hoh-roh-ah",
     category: "learned",
     lines: [
       "An older accepted name for Whakatāne.",
@@ -1971,7 +2012,7 @@ const MAP_PLACES: MapPlace[] = [
     key: "manuka",
     screen: "place-manuka",
     title: "Te Mānuka Tūtahi",
-    pronunciation:"Listen: te MAH-noo-kah TOO-tah-hee",
+    pronunciation: "Listen: te MAH-noo-kah TOO-tah-hee",
     category: "learned",
     lines: [
       "Another accepted name for Whakatāne.",
@@ -1988,7 +2029,7 @@ const MAP_PLACES: MapPlace[] = [
     key: "ohiwa",
     screen: "place-ohiwa",
     title: "Ōhiwa",
-    pronunciation:"Listen: OR-hee-wah",
+    pronunciation: "Listen: OR-hee-wah",
     category: "another",
     lines: [
       "Muriwai later lived around Ōhiwa and Ōpōtiki.",
@@ -2005,7 +2046,7 @@ const MAP_PLACES: MapPlace[] = [
     key: "opotiki",
     screen: "place-opotiki",
     title: "Ōpōtiki",
-    pronunciation:"Listen: oh-paw-tee-kee",
+    pronunciation: "Listen: oh-paw-tee-kee",
     category: "another",
     lines: [
       "Muriwai later lived around Ōhiwa and Ōpōtiki.",
@@ -2022,7 +2063,7 @@ const MAP_PLACES: MapPlace[] = [
     key: "nga-kuri",
     screen: "place-nga-kuri",
     title: "Ngā Kurī-a-Whārei",
-    pronunciation:"Listen: Ngar-oo-ree-ah-fah-ray",
+    pronunciation: "Listen: Ngar-oo-ree-ah-fah-ray",
     category: "another",
     lines: [
       "This place is remembered in the saying: “Mai Ngā Kurī-a-Whārei ki Tihirau.”",
@@ -2039,7 +2080,7 @@ const MAP_PLACES: MapPlace[] = [
     key: "tihirau",
     screen: "place-tihirau",
     title: "Tihirau",
-    pronunciation:"Listen: TEE-hee-row",
+    pronunciation: "Listen: TEE-hee-row",
     category: "another",
     lines: [
       "This place is remembered in the saying: “Mai Ngā Kurī-a-Whārei ki Tihirau.”",
@@ -2056,7 +2097,7 @@ const MAP_PLACES: MapPlace[] = [
     key: "wairere",
     screen: "place-wairere",
     title: "Wairere",
-    pronunciation:"Listen: why-reh-reh",
+    pronunciation: "Listen: why-reh-reh",
     category: "discover",
     lines: [
       "Wairere is an important place in Te Whakatōhea history and learning.",
@@ -2073,7 +2114,7 @@ const MAP_PLACES: MapPlace[] = [
     key: "toka-irakewa",
     screen: "place-toka-irakewa",
     title: "Toka a Irakewa",
-    pronunciation:"Listen: TAW-kah aw ee-rah-keh-wah",
+    pronunciation: "Listen: TAW-kah aw ee-rah-keh-wah",
     category: "discover",
     lines: [
       "Toka a Irakewa is an important place in Te Whakatōhea history and learning.",
@@ -2090,7 +2131,7 @@ const MAP_PLACES: MapPlace[] = [
     key: "ana-muriwai",
     screen: "place-ana-muriwai",
     title: "Ana o Muriwai",
-    pronunciation:"Listen: Ah-nah aw Moo-ree-why",
+    pronunciation: "Listen: Ah-nah aw Moo-ree-why",
     category: "discover",
     lines: [
       "Ana o Muriwai is an important place connected with Muriwai.",
@@ -2145,7 +2186,7 @@ function MapScreen({
 
   // Click targets are centred on the red coordinate pins already drawn in the map artwork.
   // These positions are for the zoomed Whakatāne-area crop below.
-  const localZoomPositions: Record<string, { x: number; y: number }> = {
+  const localZoomPositions: Record<string, { x: number y: number }> = {
     kakahoroa: { x: 30.4, y: 41.5 },
     manuka: { x: 45.3, y: 45.2 },
     wairere: { x: 22.8, y: 60.7 },
